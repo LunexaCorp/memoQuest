@@ -2,5 +2,5 @@ package com.nikelyh.jewels.ui.activities
 
 import androidx.activity.ComponentActivity
 
-class PerfilActivity : ComponentActivity() {
+class BusquedaActivity : ComponentActivity() {
 }

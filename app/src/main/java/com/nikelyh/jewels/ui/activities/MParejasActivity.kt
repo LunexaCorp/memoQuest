@@ -1,5 +1,7 @@
 package com.nikelyh.jewels.ui.activities
 
-class MParejasActivity {
+import androidx.activity.ComponentActivity
+
+class MParejasActivity : ComponentActivity() {
 
 }
