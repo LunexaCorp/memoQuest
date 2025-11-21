@@ -38,7 +38,6 @@ data class Carta(
     val encontrada: Boolean = false
 )
 
-// ------------------------- UI --------------------------------
 @Composable
 fun ParejasGameScreen() {
     val context = LocalContext.current
