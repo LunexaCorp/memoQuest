@@ -3,9 +3,6 @@ package com.nikelyh.jewels.ui.adapters
 import androidx.compose.ui.graphics.Color
 import com.nikelyh.jewels.R
 import com.nikelyh.jewels.data.models.Modo
-import com.nikelyh.jewels.ui.activities.BusquedaActivity
-import com.nikelyh.jewels.ui.activities.MParejasActivity
-import com.nikelyh.jewels.ui.activities.MSupervivenciaActivity
 
 class ModosAdapter {
     private var indiceActual: Int = 0

@@ -34,7 +34,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nikelyh.jewels.data.models.Modo
-import com.nikelyh.jewels.ui.activities.MParejasActivity
 import com.nikelyh.jewels.ui.adapters.ModosAdapter
 import com.nikelyh.jewels.ui.theme.JewelsTheme
 import androidx.compose.runtime.getValue
@@ -93,6 +92,8 @@ fun Panel(modifier: Modifier = Modifier) {
         Footer(
             modifier = Modifier
                 .weight(0.5f)
+            ,
+            modo = modoSeleccionado
         )
     }
 }
@@ -252,7 +253,7 @@ fun Modo(modifier: Modifier = Modifier, nombre: String, imagen: Int){
 }
 
 @Composable
-fun Footer(modifier: Modifier = Modifier){
+fun Footer(modifier: Modifier = Modifier, modo: Modo){
     val context = LocalContext.current
 
     Row(
@@ -270,7 +271,7 @@ fun Footer(modifier: Modifier = Modifier){
             ),
 
             onClick = {
-                val intent = Intent(context, MParejasActivity::class.java)
+                val intent = Intent(context, modo.ActivityDestino)
                 context.startActivity(intent)
             }
         ) {
