@@ -3,16 +3,36 @@ package com.nikelyh.jewels.ui.adapters
 import androidx.compose.ui.graphics.Color
 import com.nikelyh.jewels.R
 import com.nikelyh.jewels.data.models.Modo
-import com.nikelyh.jewels.ui.activities.BusquedaActivity
+import com.nikelyh.jewels.ui.activities.MBusquedaActivity
 import com.nikelyh.jewels.ui.activities.MParejasActivity
 import com.nikelyh.jewels.ui.activities.MSupervivenciaActivity
 
 class ModosAdapter {
     private var indiceActual: Int = 0
     private val modos = listOf(
-        Modo(1, "Pareja", R.drawable.parejas, Color.Blue, MParejasActivity::class.java),
-        Modo(2, "Supervivencia", R.drawable.supervivencia, Color.Red, MSupervivenciaActivity::class.java),
-        Modo(id = 3, nombre = "Busqueda", iconoResId = R.drawable.busqueda, Color.Green, BusquedaActivity::class.java)
+        Modo(1,
+            "Match",
+            R.drawable.cards_par,
+            Color.Blue,
+            MParejasActivity::class.java,
+            "Encuentra todos los pares antes de que se acabe el tiempo"
+        ),
+        Modo(
+            2,
+            "Supervivencia",
+            R.drawable.survival,
+            Color.Red,
+            MSupervivenciaActivity::class.java,
+            "Lucha contra el reloj. Gana tiempo con cada acierto."
+        ),
+        Modo(
+            id = 3,
+            nombre = "Busqueda",
+            iconoResId = R.drawable.target,
+            Color.Magenta,
+            MBusquedaActivity::class.java,
+            "Memoriza el objetivo antes de que se oculte."
+        )
     )
 
     fun obtenerLista(): List<Modo>{
