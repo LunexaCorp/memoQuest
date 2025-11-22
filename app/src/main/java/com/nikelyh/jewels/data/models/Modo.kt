@@ -9,7 +9,8 @@ class Modo constructor(
     val nombre: String,
     @DrawableRes val iconoResId: Int,
     val colorFondo: Color,
-    val activityDestino: Class<out Activity>
+    val activityDestino: Class<out Activity>,
+    val descripcion: String
 ){
 
 }
