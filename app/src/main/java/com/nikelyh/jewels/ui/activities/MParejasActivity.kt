@@ -145,9 +145,7 @@ fun ParejasGameScreen() {
 
                                     // es pareja???
                                     if (primera.valor == actual.valor) {
-
-
-                                        Toast.makeText(context, "¡Correcto!", Toast.LENGTH_SHORT).show()
+                                        
 
                                         cartas = cartas.map {
                                             if (it.id == actual.id || it.id == primera.id)
@@ -163,7 +161,6 @@ fun ParejasGameScreen() {
                                         }
 
                                     } else {
-                                        Toast.makeText(context, "¡Fallaste!", Toast.LENGTH_SHORT).show()
                                         bloquearClicks = true
                                     }
                                 }
