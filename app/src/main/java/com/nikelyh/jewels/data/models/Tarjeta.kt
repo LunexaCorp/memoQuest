@@ -1,15 +1,16 @@
 package com.nikelyh.jewels.data.models
 
+import androidx.annotation.DrawableRes
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 
-class Tarjeta constructor(
+data class Tarjeta constructor(
     val id: Number,
     val id_pareja: Number,
-    var forma: String,
-    var picture: String,
-    val ancho: Dp,
-    val alto: Dp,
-    var estado: Number=VOLTEADO
+    @DrawableRes val picture: Int,
+    var estado: Number=VOLTEADO,
+    val color: Color,
+    var acertado : Boolean = false
 ){
     companion object{
         val VOLTEADO: Number = 0
