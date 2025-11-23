@@ -36,10 +36,7 @@ import androidx.compose.ui.unit.sp
 import com.nikelyh.jewels.data.models.Modo
 import com.nikelyh.jewels.ui.adapters.ModosAdapter
 import com.nikelyh.jewels.ui.theme.JewelsTheme
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
@@ -84,7 +81,7 @@ fun Panel(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .weight(.5f)
         )
-        Mascota(
+        CabeceraModo(
             modifier = Modifier
                 .weight(1f)
 
@@ -131,12 +128,14 @@ fun Header(modifier: Modifier = Modifier){
             Text(
                 modifier = Modifier
                     .weight(3f)
+                    .padding(5.dp)
                 ,
                 text = "Memo Quest",
                 fontFamily = PacificoFont,
                 fontSize = 30.sp,
                 color = Color.White
             )
+            /*
             IconButton(
                 modifier = Modifier
                     .weight(1f)
@@ -150,6 +149,7 @@ fun Header(modifier: Modifier = Modifier){
                     contentDescription = null
                 )
             }
+             */
 
         }
     }
@@ -157,7 +157,7 @@ fun Header(modifier: Modifier = Modifier){
 }
 
 @Composable
-fun Mascota(modifier: Modifier = Modifier, modo: Modo){
+fun CabeceraModo(modifier: Modifier = Modifier, modo: Modo){
     Row(
         modifier = modifier
             .fillMaxSize()
@@ -284,6 +284,7 @@ fun Footer(
                 ,
                 text = "JUGAR",
                 fontSize = 30.sp,
+                color = Color.White,
                 fontFamily = ScienceFont,
                 textAlign = TextAlign.Center
             )
