@@ -19,11 +19,11 @@ class ModosAdapter {
         ),
         Modo(
             2,
-            "Supervivencia",
+            "Campo minado",
             R.drawable.survival,
             Color.Red,
             MSupervivenciaActivity::class.java,
-            "Lucha contra el reloj. Gana tiempo con cada acierto."
+            "Todo es cuestión de suerte, falla una y estás fuera."
         ),
         Modo(
             id = 3,

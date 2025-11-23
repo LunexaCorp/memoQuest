@@ -17,6 +17,16 @@
             android:theme="@style/Theme.Jewels" />
 
         <activity
+            android:name=".ui.activities.MSupervivenciaActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Jewels" />
+
+        <activity
+            android:name=".ui.activities.MBusquedaActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Jewels" />
+
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
