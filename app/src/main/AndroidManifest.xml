@@ -17,12 +17,17 @@
             android:theme="@style/Theme.Jewels" />
 
         <activity
-            android:name=".ui.activities.MSupervivenciaActivity"
+            android:name=".ui.activities.MCampoMinadoActivity"
             android:exported="false"
             android:theme="@style/Theme.Jewels" />
 
         <activity
             android:name=".ui.activities.MBusquedaActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Jewels" />
+
+        <activity
+            android:name=".ui.activities.GameOverActivity"
             android:exported="false"
             android:theme="@style/Theme.Jewels" />
 

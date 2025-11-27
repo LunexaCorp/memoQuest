@@ -3,7 +3,6 @@ package com.nikelyh.jewels.ui.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Space
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,8 +10,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -54,6 +51,7 @@ class GameOverActivity : ComponentActivity(){
 
 @Composable
 fun PanelGameOver(modifier: Modifier = Modifier){
+    val context = LocalContext.current
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -64,10 +62,12 @@ fun PanelGameOver(modifier: Modifier = Modifier){
         Header()
         Body(
             onRetry = {
-                MRedireccionActivity(MBusquedaActivity::class.java)
+                val intent = Intent(context, MCampoMinadoActivity::class.java)
+                context.startActivity(intent)
             },
             onRendirse = {
-                MRedireccionActivity(MainActivity::class.java)
+                val intent = Intent(context, MainActivity::class.java)
+                context.startActivity(intent)
             }
         )
     }
@@ -148,12 +148,4 @@ fun PanelGameOverPreview() {
     JewelsTheme {
         PanelGameOver()
     }
-}
-
-
-@Composable
-fun MRedireccionActivity(activity: Class<ComponentActivity>){
-    val context = LocalContext.current
-    val intent = Intent(context, activity)
-    context.startActivity(intent)
 }

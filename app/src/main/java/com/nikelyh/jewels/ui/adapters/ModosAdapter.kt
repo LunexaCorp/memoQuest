@@ -5,7 +5,7 @@ import com.nikelyh.jewels.R
 import com.nikelyh.jewels.data.models.Modo
 import com.nikelyh.jewels.ui.activities.MBusquedaActivity
 import com.nikelyh.jewels.ui.activities.MParejasActivity
-import com.nikelyh.jewels.ui.activities.MSupervivenciaActivity
+import com.nikelyh.jewels.ui.activities.MCampoMinadoActivity
 
 class ModosAdapter {
     private var indiceActual: Int = 0
@@ -22,7 +22,7 @@ class ModosAdapter {
             "Campo minado",
             R.drawable.survival,
             Color.Red,
-            MSupervivenciaActivity::class.java,
+            MCampoMinadoActivity::class.java,
             "Todo es cuestión de suerte, falla una y estás fuera."
         ),
         Modo(

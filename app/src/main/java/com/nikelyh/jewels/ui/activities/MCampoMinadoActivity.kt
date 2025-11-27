@@ -1,5 +1,6 @@
 package com.nikelyh.jewels.ui.activities
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -36,7 +37,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.nikelyh.jewels.MainActivity
 import com.nikelyh.jewels.R
 import com.nikelyh.jewels.data.models.Tarjeta
 import com.nikelyh.jewels.ui.adapters.TarjetaAdapter
@@ -44,7 +44,7 @@ import com.nikelyh.jewels.ui.theme.JewelsTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MSupervivenciaActivity : ComponentActivity(){
+class MCampoMinadoActivity : ComponentActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -73,16 +73,16 @@ fun PanelModoSupervivencia(modifier: Modifier = Modifier){
     val tarjetaClickeada = listaTarjetas[indiceActual]
     var cartaEnEspera: Tarjeta? by remember { mutableStateOf(null) }
     var estaProcesando by remember { mutableStateOf(false) }
-    var erroresPermitidos by remember { mutableStateOf(2)}
+    var erroresPermitidos by remember { mutableStateOf(3)}
     var meRindo by remember { mutableStateOf(false)}
     val scope = rememberCoroutineScope()
     var paresConectados by remember { mutableStateOf(0) }
 
     if(meRindo || erroresPermitidos == 0){
-        RedireccionActivity(MainActivity::class.java)
+        RedireccionActivity(GameOverActivity::class.java)
     }
 
-     var probabilidadAcierto: Float = erroresPermitidos.toFloat() / (( 6 - paresConectados ) *  2 - 1) * 100
+    var probabilidadAcierto: Float = erroresPermitidos.toFloat() / (( 6 - paresConectados ) *  2 - 1) * 100
     if(probabilidadAcierto == -100f){
         probabilidadAcierto = 100f
     }
@@ -93,7 +93,7 @@ fun PanelModoSupervivencia(modifier: Modifier = Modifier){
         TarjetasView(
             listaTarjetas = listaTarjetas,
             onTarjetaClick = {
-                tarjetaClickeada ->
+                    tarjetaClickeada ->
 
                 if(!estaProcesando && tarjetaClickeada.estado != Tarjeta.DE_FRENTE){
                     // Volteando carta actual
@@ -205,7 +205,7 @@ fun TarjetaView(
             modifier = Modifier
                 .clickable{
                     onTarjetaClick()
-            }
+                }
             ,
             painter = painterResource(
                 if(tarjeta.estado == Tarjeta.VOLTEADO){
@@ -283,7 +283,7 @@ fun RendirseView(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
 
-    ){
+        ){
         Button(
             modifier = Modifier
             ,
@@ -307,7 +307,7 @@ fun RendirseView(
 }
 
 @Composable
-fun RedireccionActivity(activity: Class<MainActivity>){
+fun RedireccionActivity(activity: Class<out Activity>){
     val context = LocalContext.current
     val intent = Intent(context, activity)
     context.startActivity(intent)

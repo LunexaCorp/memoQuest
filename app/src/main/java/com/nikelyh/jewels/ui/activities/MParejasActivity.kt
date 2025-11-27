@@ -54,7 +54,7 @@ fun ParejasGameScreen() {
     var cartas by remember { mutableStateOf(value = generarCartas()) }
     val totalParejas = cartas.size / 2
 
-    var tiempo by remember { mutableIntStateOf(value = 30) }
+    var tiempo by remember { mutableIntStateOf(value = 60) }
     var primeraCarta by remember { mutableStateOf<Carta?>(null) }
     var bloquearClicks by remember { mutableStateOf(false) }
     var gameWon by remember { mutableStateOf(false) }
