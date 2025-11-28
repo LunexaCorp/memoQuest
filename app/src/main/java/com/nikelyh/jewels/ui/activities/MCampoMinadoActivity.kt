@@ -91,7 +91,11 @@ fun PanelModoSupervivencia(modifier: Modifier = Modifier){
 
 
     if(meRindo || erroresPermitidos == 0){
-        NRedireccionActivity(GameOverActivity::class.java, context)
+        val intento = Intent(context, GameOverActivity::class.java)
+        intento.putExtra("modo", "minado")
+        context.startActivity(intento)
+//        context.startActivity(intent)
+//        NRedireccionActivity(GameOverActivity::class.java, context)
     }
 
     var probabilidadAcierto: Float = erroresPermitidos.toFloat() / (( 6 - paresConectados ) *  2 - 1) * 100

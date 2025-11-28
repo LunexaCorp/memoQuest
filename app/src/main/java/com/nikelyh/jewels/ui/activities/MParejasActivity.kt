@@ -1,7 +1,16 @@
 package com.nikelyh.jewels.ui.activities
 
 import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.media.AudioAttributes
+import android.media.MediaPlayer
+import android.media.SoundPool
 import android.os.Bundle
+import android.os.Build
+import android.os.Vibrator
+import android.os.VibratorManager
+import android.os.VibrationEffect
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,6 +23,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.mutableIntStateOf
@@ -26,14 +36,75 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nikelyh.jewels.R
+import com.nikelyh.jewels.ui.theme.JewelsTheme
 import kotlinx.coroutines.delay
 
 class MParejasActivity : ComponentActivity() {
+    //bibliotecas
+    private lateinit var mp: MediaPlayer
+    private lateinit var soundPool: SoundPool
+    private var flipSound  = 0
+    private var correctSound  = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            ParejasGameScreen()
+
+        try {
+            val audioAttributes = AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_GAME)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build()
+
+            soundPool = SoundPool.Builder()
+                .setMaxStreams(3)
+                .setAudioAttributes(audioAttributes)
+                .build()
+
+            flipSound = soundPool.load(this, R.raw.flipcard, 1)
+            correctSound = soundPool.load(this, R.raw.correct, 1)
+
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error a la hora de cargar sonidos....", Toast.LENGTH_SHORT).show()
         }
+
+        //reproducir la musica
+
+        try {
+            mp = MediaPlayer.create(this, R.raw.brackground_music).apply {
+                isLooping = true
+                setVolume(0.2f, 0.2f)
+                start()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error a la hora de inciar la musica", Toast.LENGTH_SHORT).show()
+        }
+
+        setContent {
+            JewelsTheme{
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    ParejasGameScreen(
+                        modifier = Modifier.padding(innerPadding),
+                        soundPool = soundPool,
+                        flipSound = flipSound,
+                        correctSound = correctSound
+
+                    )
+                }
+            }
+        }
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        mp.release() //Apagar cuando se sale del activity
+    }
+    override fun onPause() {
+        super.onPause()
+        if (mp.isPlaying) mp.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mp.start()
     }
 }
 
@@ -47,17 +118,50 @@ data class Carta(
 )
 
 @Composable
-fun ParejasGameScreen() {
+fun ParejasGameScreen(
+    modifier: Modifier = Modifier,
+    soundPool: SoundPool,
+    flipSound: Int,
+    correctSound: Int
+) {
 
     val context = LocalContext.current
 
     var cartas by remember { mutableStateOf(value = generarCartas()) }
     val totalParejas = cartas.size / 2
 
-    var tiempo by remember { mutableIntStateOf(value = 60) }
+    var tiempo by remember { mutableIntStateOf(value = 30) }
     var primeraCarta by remember { mutableStateOf<Carta?>(null) }
     var bloquearClicks by remember { mutableStateOf(false) }
     var gameWon by remember { mutableStateOf(false) }
+
+    //perdida-vibracion
+    fun vibrar() {
+        try {
+            val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val vm = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                vm.defaultVibrator
+            } else {
+                @Suppress("DEPRECATION")
+                context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            }
+
+            val effect = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                VibrationEffect.createOneShot(120, VibrationEffect.DEFAULT_AMPLITUDE)
+            } else {
+                @Suppress("DEPRECATION")
+                VibrationEffect.createOneShot(120, 255)
+            }
+
+            vibrator.vibrate(effect)
+
+        } catch (e: Exception) {
+            Toast.makeText(context, "Vibración falló: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+    }
+
+
+
 
     // timepo
     LaunchedEffect(key1 = Unit) {
@@ -68,7 +172,11 @@ fun ParejasGameScreen() {
 
         if (tiempo == 0 && !gameWon) {
             Toast.makeText(context,"Perdiste, se te acabo el tiempo", Toast.LENGTH_SHORT).show()
-            delay(800)
+            delay(600)
+
+            val intent = Intent(context, GameOverActivity::class.java)
+            intent.putExtra("modo", "parejas")
+            context.startActivity(intent)
             (context as? Activity)?.finish()
         }
     }
@@ -91,7 +199,7 @@ fun ParejasGameScreen() {
     LaunchedEffect(key1=gameWon) {
         if (gameWon) {
             Toast.makeText(context, "Juego terminado :D", Toast.LENGTH_LONG).show()
-            delay(1200)
+            delay(700)
             (context as? Activity)?.finish()
         }
     }
@@ -136,6 +244,7 @@ fun ParejasGameScreen() {
 
                             if (!carta.descubierta && !carta.encontrada && tiempo > 0 && !gameWon) {
 
+                                soundPool.play(flipSound,1f,1f,0,0,1f)
                                 cartas = cartas.map {
                                     if (it.id == carta.id) it.copy(descubierta = true) else it
                                 }
@@ -153,12 +262,16 @@ fun ParejasGameScreen() {
                                     // encontro la pareja??
                                     if (primera.valor == actual.valor) {
 
-                                        Toast.makeText(context, "¡Correcto!", Toast.LENGTH_SHORT).show()
+                                        soundPool.play(correctSound,1f,1f,0,0,1f)
+//                                        Toast.makeText(context, "¡Correcto!", Toast.LENGTH_SHORT).show()
 
                                         cartas = cartas.map {
-                                            if (it.id == actual.id || it.id == primera.id)
+                                            if (it.id == actual.id || it.id == primera.id){
                                                 it.copy(encontrada = true, descubierta = true)
-                                            else it
+                                            } else{
+                                                it
+                                            }
+
                                         }
 
                                         primeraCarta = null
@@ -169,7 +282,8 @@ fun ParejasGameScreen() {
                                         }
 
                                     } else {
-                                        Toast.makeText(context, "¡Fallaste!", Toast.LENGTH_SHORT).show()
+//                                        Toast.makeText(context, "¡Fallaste!", Toast.LENGTH_SHORT).show()
+                                        vibrar()
                                         bloquearClicks = true
                                     }
                                 }
