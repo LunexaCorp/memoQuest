@@ -6,7 +6,7 @@ import com.nikelyh.jewels.ui.activities.erroresEstablecidos
 
 object MonedasAdapter{
     //val monedas: MutableList<Moneda> = mutableListOf()
-    val monedas: MutableList<Moneda> = generamonedas(160)
+    val monedas: MutableList<Moneda> = generamonedas(60)
 
 
     fun addMonedas(cantidad: Int=1){
