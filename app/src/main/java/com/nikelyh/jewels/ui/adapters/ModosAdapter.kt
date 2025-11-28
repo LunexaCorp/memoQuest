@@ -7,7 +7,7 @@ import com.nikelyh.jewels.ui.activities.MBusquedaActivity
 import com.nikelyh.jewels.ui.activities.MParejasActivity
 import com.nikelyh.jewels.ui.activities.MCampoMinadoActivity
 
-class ModosAdapter {
+object ModosAdapter {
     private var indiceActual: Int = 0
     private val modos = listOf(
         Modo(1,

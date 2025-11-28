@@ -1,6 +1,7 @@
 package com.nikelyh.jewels.ui.activities
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -39,6 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nikelyh.jewels.R
 import com.nikelyh.jewels.data.models.Tarjeta
+import com.nikelyh.jewels.ui.adapters.ModosAdapter
+import com.nikelyh.jewels.ui.adapters.MonedasAdapter
 import com.nikelyh.jewels.ui.adapters.TarjetaAdapter
 import com.nikelyh.jewels.ui.theme.JewelsTheme
 import kotlinx.coroutines.delay
@@ -57,9 +60,14 @@ class MCampoMinadoActivity : ComponentActivity(){
                 }
             }
         }
+        erroresEstablecidos = establecerErroresPermitidos()
     }
 }
 
+fun establecerErroresPermitidos(): Int{
+    return (1..5).random()
+}
+var erroresEstablecidos: Int = establecerErroresPermitidos()
 val ScienceFont = FontFamily(
     Font(R.font.sciencegothic_condensed_black, FontWeight.Normal)
 )
@@ -67,19 +75,23 @@ val ScienceFont = FontFamily(
 @Composable
 fun PanelModoSupervivencia(modifier: Modifier = Modifier){
     val listaTarjetas = remember {
-        TarjetaAdapter().obtenerLista().toMutableStateList()
+        TarjetaAdapter.obtenerLista().toMutableStateList()
     }
     var indiceActual by remember { mutableStateOf(0)}
     val tarjetaClickeada = listaTarjetas[indiceActual]
     var cartaEnEspera: Tarjeta? by remember { mutableStateOf(null) }
     var estaProcesando by remember { mutableStateOf(false) }
-    var erroresPermitidos by remember { mutableStateOf(3)}
+    var erroresPermitidos by remember { mutableStateOf(erroresEstablecidos)}
     var meRindo by remember { mutableStateOf(false)}
     val scope = rememberCoroutineScope()
     var paresConectados by remember { mutableStateOf(0) }
+    val monedasPosibles: Int = MonedasAdapter.monedasAGanar(erroresEstablecidos)
+
+    val context = LocalContext.current
+
 
     if(meRindo || erroresPermitidos == 0){
-        RedireccionActivity(GameOverActivity::class.java)
+        NRedireccionActivity(GameOverActivity::class.java, context)
     }
 
     var probabilidadAcierto: Float = erroresPermitidos.toFloat() / (( 6 - paresConectados ) *  2 - 1) * 100
@@ -114,6 +126,12 @@ fun PanelModoSupervivencia(modifier: Modifier = Modifier){
                         if(cartaEnEspera!!.id_pareja == tarjetaClickeada.id_pareja){
                             cartaEnEspera = null
                             paresConectados = paresConectados + 1
+
+                            // Ganó
+                            if(paresConectados == 6){
+                                MonedasAdapter.addMonedas(context,monedasPosibles)
+                                NRedireccionActivity(WinActivity::class.java, context)
+                            }
                         }
                         else{
                             scope.launch {
@@ -141,10 +159,11 @@ fun PanelModoSupervivencia(modifier: Modifier = Modifier){
         )
         DetallesView(
             modifier = Modifier
-                .weight(1f)
+                .weight(1.3f)
             ,
             erroresPermitidos = erroresPermitidos,
-            probabilidadAcierto = probabilidadAcierto
+            probabilidadAcierto = probabilidadAcierto,
+            monedas = monedasPosibles
         )
         RendirseView(
             modifier = Modifier
@@ -222,7 +241,7 @@ fun TarjetaView(
 
 @Composable
 fun DetallesView(modifier: Modifier = Modifier, erroresPermitidos: Int,
-                 probabilidadAcierto: Float){
+                 probabilidadAcierto: Float, monedas: Int){
     Row (
         modifier = modifier
             .fillMaxSize(),
@@ -270,6 +289,70 @@ fun DetallesView(modifier: Modifier = Modifier, erroresPermitidos: Int,
 
 
     }
+
+    Row(
+        modifier = modifier
+            .fillMaxSize(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        Column(
+            modifier = Modifier
+                .weight(1f)
+            ,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            Text(
+                textAlign = TextAlign.Center,
+                text = "Monedas a ganar",
+                fontSize = 20.sp,
+                fontFamily = ScienceFont,
+                fontWeight = FontWeight.Bold
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+
+            ){
+
+                if(erroresEstablecidos>2){
+                    for (i in 1..monedas){
+                        Moneda(cantidad = monedas)
+                    }
+                }
+                else{
+                    var multiplicador: Int = 0
+                    var monedasMostradas: Int = 0
+                    if(erroresEstablecidos == 1){
+                        multiplicador = 5
+                        monedasMostradas = 5
+                    }else{
+                        multiplicador = 3
+                        monedasMostradas = 3
+                    }
+                    for (i in 1..monedasMostradas){
+                        Moneda(cantidad = monedas)
+                    }
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 3.dp),
+                        text = "x$multiplicador",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 30.sp
+                    )
+                }
+
+            }
+
+        }
+    }
+}
+@Composable
+fun Moneda(modifier: Modifier = Modifier, cantidad: Int){
+    Image(
+        painter = painterResource(R.drawable.coin_pikachu),
+        contentDescription = "moneda"
+    )
 }
 
 @Composable
@@ -285,6 +368,7 @@ fun RendirseView(
 
         ){
         Button(
+
             modifier = Modifier
             ,
             onClick = {
@@ -292,9 +376,11 @@ fun RendirseView(
             }
         ) {
             Text(
-                text = "Terminar",
-                fontSize = 40.sp,
+                text = "No puedo",
+                fontSize = 20.sp,
                 fontFamily = ScienceFont,
+                modifier = Modifier
+                    .padding(10.dp)
             )
             Image(
                 painter = painterResource(R.drawable.rendirse),
@@ -306,9 +392,7 @@ fun RendirseView(
 
 }
 
-@Composable
-fun RedireccionActivity(activity: Class<out Activity>){
-    val context = LocalContext.current
+fun NRedireccionActivity(activity: Class<out Activity>, context : Context){
     val intent = Intent(context, activity)
     context.startActivity(intent)
 }

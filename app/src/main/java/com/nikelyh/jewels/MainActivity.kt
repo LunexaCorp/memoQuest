@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -40,10 +41,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
+import com.nikelyh.jewels.ui.activities.NRedireccionActivity
+import com.nikelyh.jewels.ui.activities.StoreActivity
+import com.nikelyh.jewels.ui.adapters.MonedasAdapter
+import com.nikelyh.jewels.ui.adapters.TarjetaAdapter
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MonedasAdapter.init(this)
+        TarjetaAdapter.init(this)
         enableEdgeToEdge()
         setContent {
             JewelsTheme {
@@ -69,8 +76,9 @@ val PacificoFont = FontFamily(
 
 @Composable
 fun Panel(modifier: Modifier = Modifier) {
-    val listaModos = remember { ModosAdapter().obtenerLista() }
+    val listaModos = remember { ModosAdapter.obtenerLista() }
     var indiceActual by remember { mutableStateOf(0)}
+    var monedas = remember { MonedasAdapter.numeroMonedas() }
     val modoSeleccionado = listaModos[indiceActual]
     Column(
         modifier = modifier
@@ -79,7 +87,8 @@ fun Panel(modifier: Modifier = Modifier) {
     ) {
         Header(
             modifier = Modifier
-                .weight(.5f)
+                .weight(.7f),
+            monedas = monedas
         )
         CabeceraModo(
             modifier = Modifier
@@ -94,7 +103,7 @@ fun Panel(modifier: Modifier = Modifier) {
             ,
             modo = modoSeleccionado,
 
-        )
+            )
         Footer(
             modifier = Modifier
                 .weight(1f)
@@ -111,7 +120,8 @@ fun Panel(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun Header(modifier: Modifier = Modifier){
+fun Header(modifier: Modifier = Modifier, monedas: Int){
+    val context = LocalContext.current
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -127,30 +137,54 @@ fun Header(modifier: Modifier = Modifier){
         ) {
             Text(
                 modifier = Modifier
-                    .weight(3f)
-                    .padding(5.dp)
+                    .weight(1.7f)
+                    .padding(4.dp)
                 ,
                 text = "Memo Quest",
                 fontFamily = PacificoFont,
-                fontSize = 30.sp,
+                fontSize = 27.sp,
                 color = Color.White
             )
-            /*
+
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ){
+
+                Image(
+                    modifier = Modifier.size(45.dp),
+                    painter = painterResource(R.drawable.coin_pikachu),
+                    contentDescription = "moneda pikachu"
+                )
+                Text(
+                    modifier = Modifier
+                        .weight(1f)
+                    ,
+                    text = "$monedas",
+                    fontFamily = PacificoFont,
+                    fontSize = 30.sp,
+                    color = Color.White
+                )
+            }
+
+
             IconButton(
                 modifier = Modifier
                     .weight(1f)
                 ,
                 onClick = {
-
+                    NRedireccionActivity(StoreActivity::class.java, context)
                 }
             ) {
                 Image(
-                    painter = painterResource(R.drawable.user),
+                    modifier = Modifier.size(70.dp),
+                    painter = painterResource(R.drawable.buy),
                     contentDescription = null
                 )
             }
-             */
-
         }
     }
 
@@ -169,7 +203,7 @@ fun CabeceraModo(modifier: Modifier = Modifier, modo: Modo){
             modifier = Modifier
                 .padding(10.dp)
                 .fillMaxWidth()
-                    ,
+            ,
             text = "Modo "+modo.nombre,
             textAlign = TextAlign.Center,
             fontSize = 40.sp,
@@ -185,7 +219,7 @@ fun SelectorModo(
     modifier: Modifier = Modifier,
     modo: Modo,
 
-){
+    ){
     Column(
         modifier = modifier
             .fillMaxSize()
