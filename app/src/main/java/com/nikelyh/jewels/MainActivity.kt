@@ -44,10 +44,13 @@ import androidx.compose.ui.text.font.FontWeight
 import com.nikelyh.jewels.ui.activities.NRedireccionActivity
 import com.nikelyh.jewels.ui.activities.StoreActivity
 import com.nikelyh.jewels.ui.adapters.MonedasAdapter
+import com.nikelyh.jewels.ui.adapters.TarjetaAdapter
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MonedasAdapter.init(this)
+        TarjetaAdapter.init(this)
         enableEdgeToEdge()
         setContent {
             JewelsTheme {
@@ -100,7 +103,7 @@ fun Panel(modifier: Modifier = Modifier) {
             ,
             modo = modoSeleccionado,
 
-        )
+            )
         Footer(
             modifier = Modifier
                 .weight(1f)
@@ -200,7 +203,7 @@ fun CabeceraModo(modifier: Modifier = Modifier, modo: Modo){
             modifier = Modifier
                 .padding(10.dp)
                 .fillMaxWidth()
-                    ,
+            ,
             text = "Modo "+modo.nombre,
             textAlign = TextAlign.Center,
             fontSize = 40.sp,
@@ -216,7 +219,7 @@ fun SelectorModo(
     modifier: Modifier = Modifier,
     modo: Modo,
 
-){
+    ){
     Column(
         modifier = modifier
             .fillMaxSize()

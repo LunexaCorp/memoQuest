@@ -1,5 +1,6 @@
 package com.nikelyh.jewels.ui.activities
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -174,6 +175,7 @@ fun AspectoCarta(
     monedas: Int
 ) {
     var isComprado by remember { mutableStateOf(tarjeta.comprado) }
+    val context: Context = LocalContext.current
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -213,10 +215,10 @@ fun AspectoCarta(
                 Button(
                     onClick = {
                         if(monedas >= tarjeta.precio){
-                            MonedasAdapter.deleteMonedas(tarjeta.precio)
+                            MonedasAdapter.deleteMonedas(context,tarjeta.precio)
                             tarjeta.comprado = true
                             isComprado = true
-                            TarjetaAdapter.activarCartaComprada(tarjeta)
+                            TarjetaAdapter.activarCartaComprada(context,tarjeta)
                             onCompraClick()
                         }
                     },

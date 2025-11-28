@@ -129,7 +129,7 @@ fun PanelModoSupervivencia(modifier: Modifier = Modifier){
 
                             // Ganó
                             if(paresConectados == 6){
-                                MonedasAdapter.addMonedas(monedasPosibles)
+                                MonedasAdapter.addMonedas(context,monedasPosibles)
                                 NRedireccionActivity(WinActivity::class.java, context)
                             }
                         }

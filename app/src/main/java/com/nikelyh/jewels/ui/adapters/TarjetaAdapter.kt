@@ -1,13 +1,15 @@
 package com.nikelyh.jewels.ui.adapters
 
+import android.content.Context
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import com.nikelyh.jewels.data.models.Tarjeta
 import com.nikelyh.jewels.R
+import com.nikelyh.jewels.data.AlmacenamientoJuego
 
 object TarjetaAdapter {
 
-    val list_images = mutableListOf<Int>(
+    val list_images_base = mutableListOf<Int>(
         R.drawable.payaso,
         R.drawable.chicken,
         R.drawable.dragon,
@@ -16,6 +18,8 @@ object TarjetaAdapter {
         R.drawable.linux
     )
 
+    var list_images = mutableListOf<Int>()
+
     val list_images_venta = listOf<Int>(
         R.drawable.dino,
         R.drawable.royale_esqueletos,
@@ -23,6 +27,7 @@ object TarjetaAdapter {
         R.drawable.royale_canon,
         R.drawable.royale_mosquetera
     )
+
     val list_descripciones_venta = listOf<String>(
         "Un dinosaurio común y corriente, le gustan los helados",
         "Estos esqueletos quieren ir a la batalla pronto",
@@ -42,7 +47,28 @@ object TarjetaAdapter {
     var id_pareja: Int = 1
 
     var venta = tarjetasVenta()
-    var pares = iniciarTarjetas()
+    var pares: MutableList<Tarjeta> = mutableListOf()
+
+    fun init(context: Context){
+        list_images.clear()
+        list_images.addAll(list_images_base)
+
+        val compradas = AlmacenamientoJuego.cargarCartasCompradas(context)
+        for (imgId in compradas) {
+            if (!list_images.contains(imgId)) {
+                list_images.add(imgId)
+            }
+        }
+
+        venta.forEach { tarjetaVenta ->
+            if (compradas.contains(tarjetaVenta.picture)){
+                tarjetaVenta.comprado = true
+            }
+        }
+
+        id_pareja = 1
+        pares = iniciarTarjetas()
+    }
 
     fun tarjetasVenta(): MutableList<Tarjeta>{
         val lista: MutableList<Tarjeta> = mutableListOf()
@@ -110,10 +136,11 @@ object TarjetaAdapter {
         return venta
     }
 
-    fun activarCartaComprada(tarjetaComprada: Tarjeta){
+    fun activarCartaComprada(context: Context, tarjetaComprada: Tarjeta){
         if (!list_images.contains(tarjetaComprada.picture)) {
             list_images.add(tarjetaComprada.picture)
             pares = iniciarTarjetas()
+            AlmacenamientoJuego.guardarCartaComprada(context, tarjetaComprada.picture)
         }
     }
 
