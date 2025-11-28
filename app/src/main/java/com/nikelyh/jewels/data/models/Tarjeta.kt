@@ -10,7 +10,10 @@ data class Tarjeta constructor(
     @DrawableRes val picture: Int,
     var estado: Number=VOLTEADO,
     val color: Color,
-    var acertado : Boolean = false
+    var acertado : Boolean = false,
+    var precio: Int = 0,
+    var descripcion: String = "",
+    var comprado: Boolean = true,
 ){
     companion object{
         val VOLTEADO: Number = 0
