@@ -37,10 +37,12 @@ class GameOverActivity : ComponentActivity(){
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val modo = intent.getStringExtra("modo") ?: ""
             JewelsTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     PanelGameOver(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
+                        modo = modo
                     )
                 }
             }
@@ -50,7 +52,7 @@ class GameOverActivity : ComponentActivity(){
 
 
 @Composable
-fun PanelGameOver(modifier: Modifier = Modifier){
+fun PanelGameOver(modifier: Modifier = Modifier, modo: String="minado"){
     val context = LocalContext.current
     Column(
         modifier = modifier
@@ -62,12 +64,19 @@ fun PanelGameOver(modifier: Modifier = Modifier){
         Header()
         Body(
             onRetry = {
-                val intent = Intent(context, MCampoMinadoActivity::class.java)
+                val intent = when(modo){
+                    "parejas" -> Intent(context, MParejasActivity::class.java)
+                    "minado" -> Intent(context, MCampoMinadoActivity::class.java)
+                    else -> Intent(context, MainActivity::class.java)
+                }
+//                val intent = Intent(context, MCampoMinadoActivity::class.java)
                 context.startActivity(intent)
+                //(context as? Activity)?.finish()
             },
             onRendirse = {
                 val intent = Intent(context, MainActivity::class.java)
                 context.startActivity(intent)
+            //(context as? Activity)?.finish()
             }
         )
     }
