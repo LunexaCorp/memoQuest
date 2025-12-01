@@ -25,14 +25,14 @@ object ModosAdapter {
             MCampoMinadoActivity::class.java,
             "Todo es cuestión de suerte, falla una y estás fuera."
         ),
-        Modo(
+        /*Modo(
             id = 3,
             nombre = "Busqueda",
             iconoResId = R.drawable.target,
             Color.Magenta,
             MBusquedaActivity::class.java,
             "Memoriza el objetivo antes de que se oculte."
-        )
+        )*/
     )
 
     fun obtenerLista(): List<Modo>{

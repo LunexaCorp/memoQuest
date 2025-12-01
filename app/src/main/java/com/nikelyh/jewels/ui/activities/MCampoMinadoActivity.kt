@@ -65,7 +65,15 @@ class MCampoMinadoActivity : ComponentActivity(){
 }
 
 fun establecerErroresPermitidos(): Int{
-    return (1..5).random()
+    val probabilidad = listOf(
+        1,
+        2,2,
+        3,3,3,
+        4,4,4,4,
+        5,5,5,5,5,
+        6,6,6,6,6,6
+    )
+    return probabilidad.random()
 }
 var erroresEstablecidos: Int = establecerErroresPermitidos()
 val ScienceFont = FontFamily(
@@ -319,7 +327,7 @@ fun DetallesView(modifier: Modifier = Modifier, erroresPermitidos: Int,
 
             ){
 
-                if(erroresEstablecidos>2){
+                if(erroresEstablecidos>3){
                     for (i in 1..monedas){
                         Moneda(cantidad = monedas)
                     }
@@ -328,9 +336,12 @@ fun DetallesView(modifier: Modifier = Modifier, erroresPermitidos: Int,
                     var multiplicador: Int = 0
                     var monedasMostradas: Int = 0
                     if(erroresEstablecidos == 1){
-                        multiplicador = 5
+                        multiplicador = 7
                         monedasMostradas = 5
-                    }else{
+                    }else if(erroresEstablecidos == 2){
+                        multiplicador = 4
+                        monedasMostradas = 5
+                    }else if(erroresEstablecidos == 3){
                         multiplicador = 3
                         monedasMostradas = 3
                     }

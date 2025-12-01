@@ -7,7 +7,6 @@ import com.nikelyh.jewels.data.AlmacenamientoJuego
 import com.nikelyh.jewels.ui.activities.erroresEstablecidos
 
 object MonedasAdapter{
-    //val monedas: MutableList<Moneda> = mutableListOf()
     var monedas: MutableList<Moneda> = mutableListOf()
 
     fun init(context: Context){
@@ -52,17 +51,17 @@ object MonedasAdapter{
     // Para modo minas
     fun monedasAGanar(erroresEstablecidoss: Int): Int{
         if(erroresEstablecidoss == 4){
-            return 3
-        }
-        if(erroresEstablecidos ==3) {
             return 5
         }
-        else if(erroresEstablecidos==2){
+        if(erroresEstablecidos ==3) {
             return 9
         }
-        else if(erroresEstablecidos==1){
-            return 25
+        else if(erroresEstablecidos==2){
+            return 20
         }
-        return 2
+        else if(erroresEstablecidos==1){
+            return 35
+        }
+        return 3
     }
 }

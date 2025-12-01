@@ -1,7 +1,6 @@
 package com.nikelyh.jewels.ui.adapters
 
 import android.content.Context
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import com.nikelyh.jewels.data.models.Tarjeta
 import com.nikelyh.jewels.R
@@ -41,7 +40,7 @@ object TarjetaAdapter {
         20,
         30,
         40,
-        60
+        55
     )
 
     var id_pareja: Int = 1
@@ -129,7 +128,16 @@ object TarjetaAdapter {
     }
 
     fun obtenerLista(): List<Tarjeta>{
-        return pares.shuffled()
+        var listaPares: MutableList<Tarjeta> = mutableListOf()
+
+        val indexPar = (0..pares.size-1 step 2).toMutableList()
+        indexPar.shuffle()
+
+        for(i in indexPar){
+            listaPares.add(pares[i])
+            listaPares.add(pares[i+1])
+        }
+        return listaPares
     }
 
     fun obtenerListaVenta(): List<Tarjeta>{
