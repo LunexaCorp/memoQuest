@@ -204,6 +204,7 @@ fun AspectoCarta(
                 text = "${tarjeta.descripcion}",
                 textAlign = TextAlign.Center,
                 fontFamily = Fredoka,
+                color = Color.Black
             )
             Row(
                 modifier = Modifier
@@ -232,13 +233,15 @@ fun AspectoCarta(
                         )
                         Text(
                             text = "${tarjeta.precio}",
-                            fontSize = 20.sp
+                            fontSize = 20.sp,
+                            color = Color.Black
                         )
                     }
                     else{
                         Text(
                             text = "COMPRADO",
-                            fontSize = 23.sp
+                            fontSize = 23.sp,
+                            color = Color.Blue
                         )
                     }
 

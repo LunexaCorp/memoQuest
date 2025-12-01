@@ -71,7 +71,6 @@ fun establecerErroresPermitidos(): Int{
         3,3,3,
         4,4,4,4,
         5,5,5,5,5,
-        6,6,6,6,6,6
     )
     return probabilidad.random()
 }
@@ -107,9 +106,7 @@ fun PanelModoSupervivencia(modifier: Modifier = Modifier){
     }
 
     var probabilidadAcierto: Float = erroresPermitidos.toFloat() / (( 6 - paresConectados ) *  2 - 1) * 100
-    if(probabilidadAcierto == -100f){
-        probabilidadAcierto = 100f
-    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -327,7 +324,7 @@ fun DetallesView(modifier: Modifier = Modifier, erroresPermitidos: Int,
 
             ){
 
-                if(erroresEstablecidos>3){
+                if(erroresEstablecidos>2){
                     for (i in 1..monedas){
                         Moneda(cantidad = monedas)
                     }
@@ -336,14 +333,11 @@ fun DetallesView(modifier: Modifier = Modifier, erroresPermitidos: Int,
                     var multiplicador: Int = 0
                     var monedasMostradas: Int = 0
                     if(erroresEstablecidos == 1){
-                        multiplicador = 7
+                        multiplicador = 5
                         monedasMostradas = 5
                     }else if(erroresEstablecidos == 2){
-                        multiplicador = 4
-                        monedasMostradas = 5
-                    }else if(erroresEstablecidos == 3){
                         multiplicador = 3
-                        monedasMostradas = 3
+                        monedasMostradas = 5
                     }
                     for (i in 1..monedasMostradas){
                         Moneda(cantidad = monedas)
