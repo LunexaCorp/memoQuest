@@ -132,11 +132,17 @@ object TarjetaAdapter {
 
         val indexPar = (0..pares.size-1 step 2).toMutableList()
         indexPar.shuffle()
+        var contador: Int = 0
 
         for(i in indexPar){
             listaPares.add(pares[i])
             listaPares.add(pares[i+1])
+            contador ++
+            if(contador==6){
+                break;
+            }
         }
+        listaPares.shuffle()
         return listaPares
     }
 
