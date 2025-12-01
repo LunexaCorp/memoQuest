@@ -51,16 +51,16 @@ object MonedasAdapter{
     // Para modo minas
     fun monedasAGanar(erroresEstablecidoss: Int): Int{
         if(erroresEstablecidoss == 4){
-            return 5
+            return 3
         }
         if(erroresEstablecidos ==3) {
-            return 9
+            return 5
         }
         else if(erroresEstablecidos==2){
-            return 20
+            return 15
         }
         else if(erroresEstablecidos==1){
-            return 35
+            return 25
         }
         return 3
     }
