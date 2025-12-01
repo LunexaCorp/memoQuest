@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
@@ -54,6 +55,9 @@ class GameOverActivity : ComponentActivity(){
 @Composable
 fun PanelGameOver(modifier: Modifier = Modifier, modo: String="minado"){
     val context = LocalContext.current
+    BackHandler (enabled = true) {
+
+    }
     Column(
         modifier = modifier
             .fillMaxSize()

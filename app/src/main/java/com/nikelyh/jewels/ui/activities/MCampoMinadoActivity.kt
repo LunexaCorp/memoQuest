@@ -106,7 +106,9 @@ fun PanelModoSupervivencia(modifier: Modifier = Modifier){
     }
 
     var probabilidadAcierto: Float = erroresPermitidos.toFloat() / (( 6 - paresConectados ) *  2 - 1) * 100
-
+    if(probabilidadAcierto<0){
+        probabilidadAcierto = 100f
+    }
     Column(
         modifier = modifier
             .fillMaxSize()
