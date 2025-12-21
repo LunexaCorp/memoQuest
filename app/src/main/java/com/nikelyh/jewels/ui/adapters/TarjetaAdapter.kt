@@ -5,9 +5,11 @@ import androidx.compose.ui.graphics.Color
 import com.nikelyh.jewels.data.models.Tarjeta
 import com.nikelyh.jewels.R
 import com.nikelyh.jewels.data.AlmacenamientoJuego
+import com.nikelyh.jewels.data.database.AppDatabase
+import com.nikelyh.jewels.data.database.CartaCompradaEntity
 
 object TarjetaAdapter {
-
+    private lateinit var db: AppDatabase
     val list_images_base = mutableListOf<Int>(
         R.drawable.payaso,
         R.drawable.chicken,
@@ -49,18 +51,20 @@ object TarjetaAdapter {
     var pares: MutableList<Tarjeta> = mutableListOf()
 
     fun init(context: Context){
+
         list_images.clear()
         list_images.addAll(list_images_base)
 
-        val compradas = AlmacenamientoJuego.cargarCartasCompradas(context)
-        for (imgId in compradas) {
+        val compradasIds = AlmacenamientoJuego.cargarCartasCompradas(context)
+
+        for (imgId in compradasIds) {
             if (!list_images.contains(imgId)) {
                 list_images.add(imgId)
             }
         }
 
         venta.forEach { tarjetaVenta ->
-            if (compradas.contains(tarjetaVenta.picture)){
+            if (compradasIds.contains(tarjetaVenta.picture)){
                 tarjetaVenta.comprado = true
             }
         }
@@ -103,7 +107,7 @@ object TarjetaAdapter {
                 picture = list_images[index_image],
                 estado = Tarjeta.VOLTEADO,
                 color = color
-                )
+            )
             )
             lista.add(Tarjeta(
                 id = i + 1,
@@ -154,6 +158,7 @@ object TarjetaAdapter {
         if (!list_images.contains(tarjetaComprada.picture)) {
             list_images.add(tarjetaComprada.picture)
             pares = iniciarTarjetas()
+
             AlmacenamientoJuego.guardarCartaComprada(context, tarjetaComprada.picture)
         }
     }

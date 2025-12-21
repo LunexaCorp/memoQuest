@@ -4,12 +4,18 @@ import android.content.Context
 import com.nikelyh.jewels.data.models.Moneda
 import com.nikelyh.jewels.R
 import com.nikelyh.jewels.data.AlmacenamientoJuego
+import com.nikelyh.jewels.data.database.AppDatabase
+import com.nikelyh.jewels.data.database.UsuarioEntity
 import com.nikelyh.jewels.ui.activities.erroresEstablecidos
 
 object MonedasAdapter{
+    // Referencia a la base de datos
+    private lateinit var db: AppDatabase
+
     var monedas: MutableList<Moneda> = mutableListOf()
 
     fun init(context: Context){
+        // Actualizamos tu lista local visual basada en la DB
         val cantidadGuardada = AlmacenamientoJuego.cargarMonedas(context)
         monedas = generamonedas(cantidadGuardada)
     }
@@ -23,6 +29,7 @@ object MonedasAdapter{
                 iconoResId = R.drawable.coin_pikachu
             ))
         }
+        // Él guardará en Room (offline) Y en Firebase (online).
         AlmacenamientoJuego.guardarMonedas(context, monedas.size)
     }
 
@@ -39,10 +46,15 @@ object MonedasAdapter{
     }
 
     fun deleteMonedas(context: Context, cantidad: Int=1){
-        for(i in 1..cantidad){
-            monedas.removeAt(monedas.size - 1)
+        if (monedas.isNotEmpty()) {
+            for (i in 1..cantidad) {
+                if (monedas.isNotEmpty()) {
+                    monedas.removeAt(monedas.size - 1)
+                }
+            }
+            // GUARDAMOS EL CAMBIO TAMBIÉN AQUÍ
+            AlmacenamientoJuego.guardarMonedas(context, monedas.size)
         }
-        AlmacenamientoJuego.guardarMonedas(context, monedas.size)
     }
 
     fun numeroMonedas(): Int{

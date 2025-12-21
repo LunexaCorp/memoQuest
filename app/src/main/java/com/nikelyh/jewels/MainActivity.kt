@@ -45,10 +45,18 @@ import com.nikelyh.jewels.ui.activities.NRedireccionActivity
 import com.nikelyh.jewels.ui.activities.StoreActivity
 import com.nikelyh.jewels.ui.adapters.MonedasAdapter
 import com.nikelyh.jewels.ui.adapters.TarjetaAdapter
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.text.style.TextOverflow
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        com.nikelyh.jewels.data.AlmacenamientoJuego.inicializarSesion(this)
         MonedasAdapter.init(this)
         TarjetaAdapter.init(this)
         enableEdgeToEdge()
@@ -122,6 +130,58 @@ fun Panel(modifier: Modifier = Modifier) {
 @Composable
 fun Header(modifier: Modifier = Modifier, monedas: Int){
     val context = LocalContext.current
+
+    // --- LÓGICA DE LOGIN (DIALOG) ---
+    var showDialog by remember { mutableStateOf(false) }
+    var usernameInput by remember { mutableStateOf("") }
+    val usuarioConectado = com.nikelyh.jewels.data.AlmacenamientoJuego.usuarioActual
+    val estaOnline = usuarioConectado != null
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text(text = if(estaOnline) "Perfil de Jugador" else "Sincronizar Nube") },
+            text = {
+                Column {
+                    if (estaOnline) {
+                        Text("Hola, $usuarioConectado 👋")
+                        Text("Tu progreso está seguro en la nube.", fontSize = 12.sp, color = Color.Gray)
+                        Text("\n¿Deseas cerrar sesión?", fontWeight = FontWeight.Bold)
+                    } else {
+                        Text("Juega seguro. Ingresa un alias para guardar tus monedas y cartas en la nube.")
+                        OutlinedTextField(
+                            value = usernameInput,
+                            onValueChange = { usernameInput = it },
+                            label = { Text("Tu Alias") },
+                            singleLine = true,
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        if (estaOnline) {
+                            com.nikelyh.jewels.data.AlmacenamientoJuego.desconectarUsuario(context)
+                        } else {
+                            if (usernameInput.isNotEmpty()) {
+                                com.nikelyh.jewels.data.AlmacenamientoJuego.conectarUsuario(context, usernameInput)
+                            }
+                        }
+                        showDialog = false
+                    }
+                ) {
+                    Text(if(estaOnline) "Cerrar Sesión" else "Conectar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDialog = false }) { Text("Cancelar") }
+            }
+        )
+    }
+
+    // --- DISEÑO VISUAL (HEADER) ---
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -130,64 +190,75 @@ fun Header(modifier: Modifier = Modifier, monedas: Int){
         Row(
             modifier = modifier
                 .fillMaxWidth()
-            ,
+                .padding(horizontal = 4.dp), // Un poco de margen a los lados
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-
+            horizontalArrangement = Arrangement.SpaceBetween // Distribuye mejor el espacio
         ) {
-            Text(
-                modifier = Modifier
-                    .weight(1.7f)
-                    .padding(4.dp)
-                ,
-                text = "Memo Quest",
-                fontFamily = PacificoFont,
-                fontSize = 27.sp,
-                color = Color.White
-            )
 
-            Row(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ){
-
-                Image(
-                    modifier = Modifier.size(45.dp),
-                    painter = painterResource(R.drawable.coin_pikachu),
-                    contentDescription = "moneda pikachu"
-                )
-                Text(
-                    modifier = Modifier
-                        .weight(1f)
-                    ,
-                    text = "$monedas",
-                    fontFamily = PacificoFont,
-                    fontSize = 30.sp,
-                    color = Color.White
+            // 1. IZQUIERDA: Botón de Perfil (Login)
+            IconButton(
+                modifier = Modifier.weight(0.7f), // Le damos poco peso, es solo un icono
+                onClick = { showDialog = true }
+            ) {
+                Icon(
+                    // Cambia de icono si está conectado
+                    imageVector = if (estaOnline) Icons.Default.AccountCircle else Icons.Default.Person,
+                    contentDescription = "Login",
+                    // Verde si está online, Blanco si no
+                    tint = if (estaOnline) Color(0xFF4CAF50) else Color.White,
+                    modifier = Modifier.size(32.dp)
                 )
             }
 
-
-            IconButton(
+            // 2. CENTRO: Título (Reducido un poco)
+            Text(
                 modifier = Modifier
-                    .weight(1f)
-                ,
-                onClick = {
-                    NRedireccionActivity(StoreActivity::class.java, context)
-                }
-            ) {
+                    .weight(1.8f) // El que más ocupa
+                    .padding(horizontal = 4.dp),
+                text = if(estaOnline) "$usuarioConectado" else "Memo Quest", // Truco: Muestra el nombre si está conectado!
+                fontFamily = PacificoFont,
+                fontSize = 22.sp, // BAJAMOS DE 27 A 22 para que quepa
+                color = Color.White,
+                maxLines = 1, // Que no se baje de línea
+                overflow = TextOverflow.Ellipsis, // Pone "..." si el nombre es muy largo
+                textAlign = TextAlign.Center
+            )
+
+            // 3. DERECHA: Monedas + Tienda (Agrupados)
+            Row(
+                modifier = Modifier.weight(1.5f),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End
+            ){
+                // Monedas
                 Image(
-                    modifier = Modifier.size(70.dp),
-                    painter = painterResource(R.drawable.buy),
+                    modifier = Modifier.size(30.dp), // Un pelín más pequeño
+                    painter = painterResource(R.drawable.coin_pikachu),
                     contentDescription = null
                 )
+                Text(
+                    text = "$monedas",
+                    fontFamily = PacificoFont,
+                    fontSize = 24.sp, // Bajamos de 30 a 24
+                    color = Color.White,
+                    modifier = Modifier.padding(start = 4.dp, end = 8.dp)
+                )
+
+                // Tienda
+                IconButton(
+                    onClick = {
+                        NRedireccionActivity(StoreActivity::class.java, context)
+                    }
+                ) {
+                    Image(
+                        modifier = Modifier.size(40.dp),
+                        painter = painterResource(R.drawable.buy),
+                        contentDescription = null
+                    )
+                }
             }
         }
     }
-
 }
 
 @Composable
@@ -300,7 +371,7 @@ fun Footer(
 
         Button(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(10.dp)
                 .align(Alignment.CenterVertically)
             ,
             colors = ButtonDefaults.buttonColors(
