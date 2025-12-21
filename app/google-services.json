@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "852380805882",
+    "project_id": "jewels-xd",
+    "storage_bucket": "jewels-xd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:852380805882:android:9e8b571b5c193a165b3743",
+        "android_client_info": {
+          "package_name": "com.lunexa.memoQuest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDw-zm3ecscV7NjOD9Isu0Cji1HYr7-mtg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:852380805882:android:3eeebcb35d7bc14f5b3743",
+        "android_client_info": {
+          "package_name": "com.nikelyh.jewels"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDw-zm3ecscV7NjOD9Isu0Cji1HYr7-mtg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
