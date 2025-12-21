@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.nikelyh.jewels" />
+                  <option name="mobileSdkAppId" value="1:852380805882:android:3eeebcb35d7bc14f5b3743" />
+                  <option name="projectId" value="jewels-xd" />
+                  <option name="projectNumber" value="852380805882" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
