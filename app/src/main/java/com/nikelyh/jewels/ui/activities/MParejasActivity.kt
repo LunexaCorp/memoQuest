@@ -545,7 +545,7 @@ fun ParejasGameScreen(
                         containerColor = if (gameWon) Color(0xFF4CAF50) else Color(0xFF2196F3)
                     )
                 ) {
-                    Text("Continuar")
+                    Text("Continuar¡¡")
                 }
             }
         )
